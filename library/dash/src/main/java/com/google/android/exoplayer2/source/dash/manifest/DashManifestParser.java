@@ -58,6 +58,7 @@ import org.xmlpull.v1.XmlSerializer;
 public class DashManifestParser extends DefaultHandler
     implements ParsingLoadable.Parser<DashManifest> {
 
+
   private static final String TAG = "MpdParser";
 
   private static final Pattern FRAME_RATE_PATTERN = Pattern.compile("(\\d+)(?:/(\\d+))?");
@@ -68,7 +69,7 @@ public class DashManifestParser extends DefaultHandler
 
   private final String contentId;
   private final XmlPullParserFactory xmlParserFactory;
-
+  public String defaultKid = "";
   /**
    * Equivalent to calling {@code new DashManifestParser(null)}.
    */
@@ -86,6 +87,10 @@ public class DashManifestParser extends DefaultHandler
     } catch (XmlPullParserException e) {
       throw new RuntimeException("Couldn't create XmlPullParserFactory instance", e);
     }
+  }
+
+  public void set_default_kid(String default_kid) {
+    this.defaultKid = default_kid;
   }
 
   // MPD parsing.
@@ -415,7 +420,8 @@ public class DashManifestParser extends DefaultHandler
       switch (Util.toLowerInvariant(schemeIdUri)) {
         case "urn:mpeg:dash:mp4protection:2011":
           schemeType = xpp.getAttributeValue(null, "value");
-          String defaultKid = XmlPullParserUtil.getAttributeValueIgnorePrefix(xpp, "default_KID");
+         // String defaultKid = "B253C726-C24C-7C94-A3DD-F9B1907E2C76bas";
+          //String defaultKid = XmlPullParserUtil.getAttributeValueIgnorePrefix(xpp, "default_KID");
           if (!TextUtils.isEmpty(defaultKid)
               && !"00000000-0000-0000-0000-000000000000".equals(defaultKid)) {
             String[] defaultKidStrings = defaultKid.split("\\s+");
